@@ -324,6 +324,24 @@ if(std::shared_ptr<A> shared_a = weak_a1.lock()) // lock返回一个非空的sha
 weak_a1.reset();//将weak_a1置空
 ```
 
+weak_ptr还有一个作用：**一切应该不具有对象所有权，又想安全访问对象的情况**[Link](https://csguide.cn/cpp/memory/how_to_understand_weak_ptr.html#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3weak-ptr-%E8%B5%84%E6%BA%90%E6%89%80%E6%9C%89%E6%9D%83%E9%97%AE%E9%A2%98)
+
+```c++
+std::weak_ptr<SomeClass> wp{ sp };
+
+if (!wp.expired()) {// 在多线程中，这个过程中sp可能被释放
+    wp.lock()->DoSomething();
+}
+
+// 正确做法
+auto sp = wp.lock(); // lock函数是一个atomic操作
+if (sp) {
+    sp->DoSomething();
+}
+```
+
+
+
 ## Credit
 
 [c++ 11 的shared_ptr多线程安全](https://www.zhihu.com/question/56836057)

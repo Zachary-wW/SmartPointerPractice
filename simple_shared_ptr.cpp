@@ -13,10 +13,13 @@ class SimpleSharedPtr {
    public:
     // 构造函数
     explicit SimpleSharedPtr(T* ptr = nullptr)
-        : ptr_(ptr), cnt_(ptr ? new size_t(1) : nullptr) {}
+        : ptr_(ptr), cnt_(ptr ? new size_t(1) : nullptr) {
+        std::cout << "SimpleSharedPtr 构造函数\n";
+    }
 
     // 拷贝构造函数
     SimpleSharedPtr(const SimpleSharedPtr& other) {
+        std::cout << "SimpleSharedPtr 拷贝构造函数\n";
         ptr_ = other.ptr_;
         cnt_ = other.cnt_;
         if (cnt_) {
@@ -26,6 +29,7 @@ class SimpleSharedPtr {
 
     // 赋值运算符重载
     SimpleSharedPtr& operator=(const SimpleSharedPtr& other) {
+        std::cout << "SimpleSharedPtr 赋值运算符\n";
         if (this != &other) {
             release();  // 判断原先的sharedptr是否可以释放
             ptr_ = other.ptr_;
@@ -38,7 +42,10 @@ class SimpleSharedPtr {
     }
 
     // 析构函数
-    ~SimpleSharedPtr() { release(); }
+    ~SimpleSharedPtr() {
+        release();
+        std::cout << "SimpleSharedPtr 析构函数\n";
+    }
 
     // 相关函数
     T* get() const { return ptr_; }
