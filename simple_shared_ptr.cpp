@@ -9,27 +9,28 @@
 #include <iostream>
 
 template <typename T>
-class SimpleSharedPtr{
-public:
+class SimpleSharedPtr {
+   public:
     // 构造函数
-    explicit SimpleSharedPtr(T* ptr = nullptr):ptr_(ptr),cnt_(ptr ? new size_t(1) : nullptr){}
-    
+    explicit SimpleSharedPtr(T* ptr = nullptr)
+        : ptr_(ptr), cnt_(ptr ? new size_t(1) : nullptr) {}
+
     // 拷贝构造函数
-    SimpleSharedPtr(const SimpleSharedPtr& other){
+    SimpleSharedPtr(const SimpleSharedPtr& other) {
         ptr_ = other.ptr_;
         cnt_ = other.cnt_;
-        if(cnt_){
+        if (cnt_) {
             ++(*cnt_);
         }
     }
 
     // 赋值运算符重载
-    SimpleSharedPtr& operator=(const SimpleSharedPtr& other){
-        if(this != &other){
-            release(); // 判断原先的sharedptr是否可以释放
+    SimpleSharedPtr& operator=(const SimpleSharedPtr& other) {
+        if (this != &other) {
+            release();  // 判断原先的sharedptr是否可以释放
             ptr_ = other.ptr_;
             cnt_ = other.cnt_;
-            if(cnt_){
+            if (cnt_) {
                 ++(*cnt_);
             }
         }
@@ -37,29 +38,18 @@ public:
     }
 
     // 析构函数
-    ~SimpleSharedPtr(){
-        release();
-    }
+    ~SimpleSharedPtr() { release(); }
 
     // 相关函数
-    T* get() const{
-        return ptr_;
-    }
-    size_t use_count() const {
-        return cnt_ ? *cnt_ : 0;
-    }
+    T* get() const { return ptr_; }
+    size_t use_count() const { return cnt_ ? *cnt_ : 0; }
     // 运算符重载
-    T* operator->() const {
-        return ptr_;
-    }
-    T& operator*() const{
-        return *ptr_;
-    }
+    T* operator->() const { return ptr_; }
+    T& operator*() const { return *ptr_; }
 
-private:
-
-    void release(){
-        if(cnt_ && --(*cnt_) == 0){
+   private:
+    void release() {
+        if (cnt_ && --(*cnt_) == 0) {
             delete ptr_;
             delete cnt_;
         }
@@ -70,7 +60,7 @@ private:
 };
 
 class MyClass {
-public:
+   public:
     MyClass() { std::cout << "MyClass 构造函数\n"; }
     ~MyClass() { std::cout << "MyClass 析构函数\n"; }
     void do_something() { std::cout << "MyClass::do_something() 被调用\n"; }
